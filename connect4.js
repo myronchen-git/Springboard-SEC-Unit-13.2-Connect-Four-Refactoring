@@ -8,7 +8,17 @@ class Game {
   constructor(height = 6, width = 7) {
     this.height = height;
     this.width = width;
-    this.currPlayer = 1; // active player: 1 or 2
+
+    this.player1 = new Player(
+      document.querySelector("#p1name").value,
+      document.querySelector("#p1color").value
+    );
+    this.player2 = new Player(
+      document.querySelector("#p2name").value,
+      document.querySelector("#p2color").value
+    );
+    this.currPlayer = this.player1;
+
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.isGameOver = false;
 
@@ -71,7 +81,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement("div");
     piece.classList.add("piece");
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -102,7 +112,7 @@ class Game {
 
       // check for win
       if (this.checkForWin()) {
-        return this.endGame(`Player ${this.currPlayer} won!`);
+        return this.endGame(`Player ${this.currPlayer.name} won!`);
       }
 
       // check for tie
@@ -111,7 +121,8 @@ class Game {
       }
 
       // switch players
-      this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+      this.currPlayer =
+        this.currPlayer === this.player1 ? this.player2 : this.player1;
     }
   }
 
@@ -173,6 +184,13 @@ class Game {
         }
       }
     }
+  }
+}
+
+class Player {
+  constructor(name, color) {
+    this.name = name;
+    this.color = color;
   }
 }
 
