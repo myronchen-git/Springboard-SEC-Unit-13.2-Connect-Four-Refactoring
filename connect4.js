@@ -186,21 +186,41 @@ class Game {
 
 class Player {
   constructor(name, color) {
+    if (name === "" || color === "") {
+      throw new TypeError("Name or color can not be empty.");
+    }
+
     this.name = name;
     this.color = color;
   }
 }
 
-const buttonStart = document.querySelector("#buttonStart");
-buttonStart.addEventListener("click", () => {
-  const p1 = new Player(
-    document.querySelector("#p1name").value,
-    document.querySelector("#p1color").value
-  );
-  const p2 = new Player(
-    document.querySelector("#p2name").value,
-    document.querySelector("#p2color").value
-  );
+function handleStart() {
+  const buttonStart = document.querySelector("#buttonStart");
+  let p1;
+  let p2;
+
+  try {
+    p1 = new Player(
+      document.querySelector("#p1name").value,
+      document.querySelector("#p1color").value
+    );
+    p2 = new Player(
+      document.querySelector("#p2name").value,
+      document.querySelector("#p2color").value
+    );
+  } catch (e) {
+    if (e instanceof TypeError) {
+      alert("Player names and colors can not be empty.");
+      return;
+    } else {
+      throw e;
+    }
+  }
+
   new Game(p1, p2);
   buttonStart.innerText = "Restart";
-});
+}
+
+const buttonStart = document.querySelector("#buttonStart");
+buttonStart.addEventListener("click", handleStart);
